@@ -94,6 +94,40 @@ describe('Arithmetic', function () {
     });
 
 // TODO: Challenge #1
+    describe('Power', function () {
+        it('raises a positive integer to a positive integer power', function (done) {
+            request.get('/arithmetic?operation=power&operand1=2&operand2=5')
+                .expect(200)
+                .end(function (err, res) {
+                    expect(res.body).to.eql({ result: 32 });
+                    done();
+                });
+        });
+        it('any number to the zero power is one', function (done) {
+            request.get('/arithmetic?operation=power&operand1=5&operand2=0')
+                .expect(200)
+                .end(function (err, res) {
+                    expect(res.body).to.eql({ result: 1 });
+                    done();
+                });
+        });
+        it('zero to a positive power is zero', function (done) {
+            request.get('/arithmetic?operation=power&operand1=0&operand2=5')
+                .expect(200)
+                .end(function (err, res) {
+                    expect(res.body).to.eql({ result: 0 });
+                    done();
+                });
+        });
+        it('handles negative exponents', function (done) {
+            request.get('/arithmetic?operation=power&operand1=2&operand2=-3')
+                .expect(200)
+                .end(function (err, res) {
+                    expect(res.body).to.eql({ result: 0.125 });
+                    done();
+                });
+        });
+    });
  
 
     describe('Multiplication', function () {
