@@ -15,8 +15,9 @@ CommentSchema.methods.toJSONFor = function(user) {
     id: this._id,
     body: this.body,
     createdAt: this.createdAt,
-    seller: this.seller.toProfileJSONFor(user)
+    seller: this.seller ? this.seller.toProfileJSONFor(user) : null
   };
 };
 
 mongoose.model("Comment", CommentSchema);
+    
