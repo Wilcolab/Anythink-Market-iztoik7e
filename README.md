@@ -1,24 +1,29 @@
-# Python Server
+# Anythink Market - Multi-Server Application
 
-This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
+This project contains both a Python FastAPI server and a Node.js Express server. The Node.js server is the primary implementation and includes all endpoints migrated from the Python server.
 
 ## Project Structure
 
 The project has the following files and directories:
 
-- `python-server/src/main.py`: This file contains the implementation of the FastAPI server with two routes. It handles adding a task to a list and retrieving the list.
+### Node.js Express Server
+- `express-server/src/app.js`: The main Express.js server implementation with task management endpoints
+- `express-server/package.json`: Node.js dependencies and project configuration
+- `express-server/nodemon.json`: Nodemon configuration for development hot-reloading
+- `express-server/Dockerfile`: Docker image for the Express.js server
 
-- `python-server/src/__init__.py`: This file is an empty file that marks the `src` directory as a Python package.
+### Python FastAPI Server (Legacy)
+- `python-server/src/main.py`: Original FastAPI server implementation with task management routes
+- `python-server/src/__init__.py`: Python package marker
+- `python-server/requirements.txt`: Python dependencies
+- `python-server/Dockerfile`: Docker image for the FastAPI server
 
-- `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
-
-- `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
-
-- `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
+### Docker Configuration
+- `docker-compose.yml`: Multi-container orchestration for both servers
 
 ## Getting Started
 
-To run the FastAPI server using Docker, follow these steps:
+To run both servers using Docker, follow these steps:
 
 - Build and start the Docker containers by running the following command:
 
@@ -26,14 +31,54 @@ To run the FastAPI server using Docker, follow these steps:
   docker compose up
   ```
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
+  This command will build the Docker images and start the containers defined in the `docker-compose.yml` file.
 
-- The FastAPI server should now be running. You can access at port `8000`.
+## Server Ports
+
+- **Node.js Express Server**: Running on port `8001` (Primary)
+- **Python FastAPI Server**: Running on port `8000` (Legacy)
 
 ## API Routes
 
-The FastAPI server provides the following API routes:
+Both servers provide the following API routes:
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
+- `GET /`: Returns "Hello World"
+- `POST /tasks`: Adds a task to the task list. The request body should contain `{ "text": "task description" }`
+- `GET /tasks`: Retrieves the task list with all stored tasks
 
-- `GET /tasks`: Retrieves the task list.
+### Example API Usage
+
+```shell
+# Get root endpoint
+curl http://localhost:8001/
+
+# Add a new task (Node.js server)
+curl -X POST http://localhost:8001/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Your task here"}'
+
+# Get all tasks
+curl http://localhost:8001/tasks
+```
+
+## Migration Details
+
+The Python endpoints have been successfully migrated to the Node.js Express server. The Node.js implementation provides:
+- Same API contract as the original Python server
+- JSON request/response handling with Express middleware
+- Input validation for task creation
+- In-memory task storage with sample data
+- Docker support for containerized deployment
+
+## Development
+
+For local development with hot-reloading:
+
+```shell
+cd express-server
+npm install
+npm start
+```
+
+The Express server will restart automatically when you modify the code.
+
